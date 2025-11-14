@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FB Instant Form Mock</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Helvetica Neue", Arial, "Noto Sans CJK TC", "PingFang TC",
+        "Microsoft JhengHei", sans-serif;
+    }
+
+    body {
+      background: #000; /* 外面黑色，模擬 FB app 底色 */
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone-frame {
+      width: 100%;
+      max-width: 480px;
+      height: 100vh;
+      max-height: 860px;
+      background: #f0f2f5;
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 12px 35px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    /* 上方 FB 藍色列（簡化版） */
+    .fb-topbar {
+      background: #1877f2;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .fb-topbar-back {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .fb-topbar-title {
+      flex: 1;
+    }
+
+    /* 內容捲動區 */
+    .content-scroll {
+      height: calc(100% - 44px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 12px 80px;
+    }
+
+    /* 頂部粉專資訊 */
+    .page-header {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .page-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #d8dfea;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .page-title-wrap {
+      flex: 1;
+    }
+
+    .page-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #050505;
+    }
+
+    .page-meta {
+      font-size: 11px;
+      color: #65676b;
+      margin-top: 2px;
+    }
+
+    .sponsored-tag {
+      font-size: 11px;
+      color: #65676b;
+    }
+
+    /* 表單外框 */
+    .instant-form {
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 12px 16px;
+    }
+
+    .form-header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #050505;
+      margin-bottom: 4px;
+    }
+
+    .form-header-desc {
+      font-size: 13px;
+      color: #65676b;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    /* 進度列（假裝只有一頁也可以保留視覺感） */
+    .progress-bar-wrap {
+      background: #e4e6eb;
+      border-radius: 999px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress-bar-inner {
+      width: 60%; /* 你可以依照實際步驟調整 */
+      height: 100%;
+      background: #1877f2;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: #65676b;
+      margin-bottom: 8px;
+    }
+
+    /* 問題卡片 */
+    .question-card {
+      border-radius: 10px;
+      border: 1px solid #e4e6eb;
+      padding: 10px 9px 9px;
+      margin-bottom: 10px;
+      background: #f9fafb;
+    }
+
+    .question-label {
+      font-size: 13px;
+      color: #050505;
+      margin-bottom: 6px;
+    }
+
+    .question-required {
+      color: #f02849;
+      margin-left: 2px;
+    }
+
+    .input-text,
+    .select-input,
+    .textarea-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccd0d5;
+      padding: 8px 10px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    .input-text:focus,
+    .select-input:focus,
+    .textarea-input:focus {
+      border-color: #1877f2;
+    }
+
+    .textarea-input {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .helper-text {
+      font-size: 11px;
+      color: #65676b;
+      margin-top: 4px;
+    }
+
+    /* 單選題 (radio) */
+    .options-group {
+      margin-top: 4px;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      padding: 5px 4px;
+      border-radius: 8px;
+    }
+
+    .option-row input {
+      margin-right: 8px;
+    }
+
+    .option-label {
+      font-size: 13px;
+      color: #050505;
+    }
+
+    /* 底部送出鈕固定區 */
+    .bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px 12px 14px;
+      background: linear-gradient(
+        to top,
+        #fff 0,
+        #fff 70%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+
+    .submit-btn {
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 11px 0;
+      font-size: 15px;
+      font-weight: 600;
+      background: #1877f2;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .submit-btn:active {
+      opacity: 0.9;
+    }
+
+    .privacy-note {
+      margin-top: 4px;
+      font-size: 10px;
+      color: #65676b;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .privacy-note a {
+      color: #1877f2;
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .phone-frame {
+        border-radius: 0;
+        max-height: none;
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="fb-topbar">
+      <div class="fb-topbar-back">←</div>
+      <div class="fb-topbar-title">表單</div>
+    </div>
+
+    <div class="content-scroll">
+      <!-- 粉專資訊 -->
+      <section class="page-header">
+        <div class="page-avatar"></div>
+        <div class="page-title-wrap">
+          <div class="page-name">Margeek 超級商店</div>
+          <div class="page-meta">
+            <span class="sponsored-tag">贊助</span> · 1 小時前
+          </div>
+        </div>
+      </section>
+
+      <!-- Instant Form 區域 -->
+      <form class="instant-form">
+        <div class="form-header-title">申請免費線上顧問諮詢</div>
+        <div class="form-header-desc">
+          請填寫以下資料，我們將透過電話或 LINE 與您聯繫，協助評估您的店家是否適合經營蝦皮 / 線上通路。
+        </div>
+
+        <div class="progress-text">步驟 1 / 1 · 基本資料</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-inner"></div>
+        </div>
+
+        <!-- 問題 1：姓名 -->
+        <div class="question-card">
+          <div class="question-label">
+            您的姓名<span class="question-required">*</span>
+          </div>
+          <input
+            type="text"
+            class="input-text"
+            name="name"
+            placeholder="例：王小明"
+            required
+          />
+        </div>
+
+        <!-- 問題 2：電話 -->
+        <div class="question-card">
+          <div class="question-label">
+            聯絡電話<span class="question-required">*</span>
+          </div>
+          <input
+            type="tel"
+            class="input-text"
+            name="phone"
+            placeholder="例：0912-345-678"
+            required
+          />
+          <div class="helper-text">請填寫手機號碼，以便顧問與您聯絡。</div>
+        </div>
+
+        <!-- 問題 3：LINE ID -->
+        <div class="question-card">
+          <div class="question-label">
+            LINE ID（選填）
+          </div>
+          <input
+            type="text"
+            class="input-text"
+            name="lineId"
+            placeholder="若方便用 LINE 聯絡請填寫"
+          />
+        </div>
+
+        <!-- 問題 4：目前店家狀態（單選） -->
+        <div class="question-card">
+          <div class="question-label">
+            您目前的營運狀態是？<span class="question-required">*</span>
+          </div>
+          <div class="options-group">
+            <label class="option-row">
+              <input type="radio" name="status" value="offline" required />
+              <span class="option-label">只有實體門市，還沒有線上通路</span>
+            </label>
+            <label class="option-row">
+              <input type="radio" name="status" value="both" />
+              <span class="option-label">已有實體門市，也有簡單網路銷售</span>
+            </label>
+            <label class="option-row">
+              <input type="radio" name="status" value="online-only" />
+              <span class="option-label">以線上銷售為主，沒有實體店面</span>
+            </label>
+            <label class="option-row">
+              <input type="radio" name="status" value="planning" />
+              <span class="option-label">正在規劃創業 / 還沒開始</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 問題 5：想了解的內容 -->
+        <div class="question-card">
+          <div class="question-label">
+            您目前最想了解的內容是？（可簡單說明）
+          </div>
+          <textarea
+            class="textarea-input"
+            name="note"
+            placeholder="例：想知道我的品項適不適合進蝦皮、需要準備多少成本…"
+          ></textarea>
+        </div>
+
+        <!-- 問題 6：聯絡時段（下拉） -->
+        <div class="question-card">
+          <div class="question-label">
+            方便聯絡的時段
+          </div>
+          <select class="select-input" name="contactTime">
+            <option value="">可擇一選填</option>
+            <option value="morning">上午（09:30–12:00）</option>
+            <option value="afternoon">下午（13:30–18:00）</option>
+            <option value="night">晚上（18:00–21:00）</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- 底部送出 -->
+    <div class="bottom-bar">
+      <button type="submit" form="form" class="submit-btn">
+        送出
+      </button>
+      <div class="privacy-note">
+        點擊「送出」即表示您同意我們的
+        <a href="#">隱私權政策</a>，您的資料僅供本次諮詢使用，不會提供給第三方。
+      </div>
+    </div>
+  </div>
+</body>
+</html>
