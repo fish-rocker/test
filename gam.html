@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <script>
+      window.googletag = window.googletag || { cmd: [] };
+
+      googletag.cmd.push(() => {
+        // 定義靜態廣告版位。
+        googletag
+          .defineSlot("/22643016689/Test_ID_Slot_320", [320, 200], "slot1")
+          .addService(googletag.pubads());
+
+        // 進行網頁層級設定。
+        googletag.setConfig({
+          adsenseAttributes: { page_url: "http://localhost:8000/gemini-code-1791430963175.html" },
+          singleRequest: false,
+        });
+
+        // 啟用 GPT 服務。
+        googletag.enableServices();
+      });
+    </script>
+    <style>
+      .ad-slot {
+        border: 1px dashed;
+        display: inline-block;
+        margin: 10px;
+      }
+      .page-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: calc(100% - 400px);
+        min-height: 200vh;
+        margin: auto;
+      }
+      .status {
+        margin: 10px;
+        min-width: 50%;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-content">
+      <div id="slot1" class="ad-slot" style="min-height: 200px; min-width: 320px"></div>
+    </div>
+    <script>
+      googletag.cmd.push(() => {
+        // 請求及顯示先前定義的所有廣告版位。
+        googletag.display("slot1");
+      });
+    </script>
+  </body>
+</html>
