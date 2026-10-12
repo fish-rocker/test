@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  
+  <meta charset="UTF-8">
+  <title>GAM 定版廣告測試頁面</title>
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+  
+  <script>
+    window.googletag = window.googletag || {cmd: []};
+
+    // 1. 同時掛載到 window 與 top，確保 iframe 內的 GAM 素材能讀取
+    window._myDynamicAdData = window.top._myDynamicAdData = {
+      title: '【測試成功】動態 API 定版廣告！',
+      imageUrl: 'https://via.placeholder.com/300x600/2563eb/ffffff?text=Dynamic+Fixed+Ad',
+      linkUrl: 'https://www.google.com'
+    };
+
+    // 2. 模擬 API 判斷邏輯
+    function mockCheckApi() {
+      return true; 
+    }
+
+    googletag.cmd.push(function() {
+      var isFixed = mockCheckApi();
+      var targetingValue = isFixed ? 'yes' : 'no';
+
+      console.log('API 判定結果，帶入 Key-Value show_fixed_ad =', targetingValue);
+
+      // 採用新版 setConfig 設定 Key-Value (消除警告)
+      googletag.setConfig({
+        targeting: {
+          'show_fixed_ad': targetingValue
+        }
+      });
+
+      // 定義廣告單元 (尺寸 300x600)
+      googletag.defineSlot('/22643016689/Test_ID_Slot', [300, 600], 'div-gpt-ad-test')
+               .addService(googletag.pubads());
+
+      googletag.enableServices();
+    });
+  </script>
+</head>
+<body style="font-family: sans-serif; padding: 20px; background: #111; color: #fff;">
+
+  <h2>GAM 定版廣告測試頁面</h2>
+  <p>下面框格為 GAM 廣告區塊：</p>
+
+  <div id="div-gpt-ad-test" style="width: 300px; height: 600px; border: 1px dashed #ccc;">
+    <script>
+      googletag.cmd.push(function() {
+        googletag.display('div-gpt-ad-test');
+      });
+    </script>
+  </div>
+
+</body>
+</html>
