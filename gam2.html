@@ -3,17 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
     <script>
-      window.googletag = window.googletag || { cmd: [] };
-
-      googletag.cmd.push(() => {
-        // 定義靜態廣告版位。
-        googletag
-          .defineSlot("/22643016689/youtext_320x200", [320, 200], "slot1")
-          .addService(googletag.pubads());
-
-        // 啟用 GPT 服務。
+      window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+        googletag.defineSlot('/22643016689/youtext_320x200', [320, 200], 'div-gpt-ad-1791818212180-0').addService(googletag.pubads());
+        googletag.pubads().enableSingleRequest();
         googletag.enableServices();
       });
     </script>
@@ -39,14 +34,11 @@
     </style>
   </head>
   <body>
-    <div class="page-content">
-      <div id="slot1" class="ad-slot" style="min-height: 200px; min-width: 320px"></div>
-    </div>
-    <script>
-      googletag.cmd.push(() => {
-        // 請求及顯示先前定義的所有廣告版位。
-        googletag.display("slot1");
-      });
-    </script>
+<!-- /22643016689/youtext_320x200 -->
+<div id='div-gpt-ad-1791818212180-0' style='min-width: 320px; min-height: 200px;'>
+  <script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1791818212180-0'); });
+  </script>
+</div>
   </body>
 </html>
