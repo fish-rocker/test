@@ -13,6 +13,11 @@
           .defineSlot("/22643016689/Test_ID_Slot_320", [320, 200], "slot1")
           .addService(googletag.pubads());
 
+      // 新增這行：啟用 SRA 單一請求架構
+      googletag.pubads().enableSingleRequest();
+
+
+                
         // 啟用 GPT 服務。
         googletag.enableServices();
       });
